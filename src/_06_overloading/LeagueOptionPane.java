@@ -19,11 +19,24 @@ import javax.swing.JPanel;
  */
 public class LeagueOptionPane {
 	
+	
+	
 	public static void showMessageDialog(String message) {
 		// 1. Open example.png and make a GUI that looks like that
 		//    The message parameter is what we want to show on our pop-up
+		JFrame frame = new JFrame();
+		JPanel panel = new JPanel();
+		JLabel label = new JLabel();
 		
-		JOptionPane.showMessageDialog(null, message);
+		frame.setVisible(true);
+		
+		frame.add(panel);
+		panel.add(label);
+		
+		
+		label.setText(message);
+		
+		frame.pack();
 		
 		// 2. Uncomment the line of code below. It sets the location of our frame to the center of the screen
 		frame.setLocationRelativeTo(null);
@@ -36,8 +49,22 @@ public class LeagueOptionPane {
 	//    2 String parameters (one for the message and one for the title)
 	public static void showMessageDialog(String message, String title) {
 		
-		JOptionPane.showMessageDialog(null, message, title, JOptionPane.PLAIN_MESSAGE);
+		JFrame frame = new JFrame();
+		JPanel panel = new JPanel();
+		JLabel label = new JLabel();
 		
+		frame.setVisible(true);
+		
+		frame.add(panel);
+		panel.add(label);
+		
+		
+		label.setText(message);
+		
+		frame.setTitle(title);
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
 	}
 	// 5. Call this method in the Runner class
 	
@@ -45,8 +72,27 @@ public class LeagueOptionPane {
 	// 6. Create another showMessageDialog() method that lets us choose the Message, Title, and Image
 	//    3 String parameters (one for the message, one for the title, and one for the fileName)
 	
-	public static void showMessageDialog(String message, String title, Icon image) {
+	public static void showMessageDialog(String message, String title, String fileName) {
+		ImageIcon image  = loadImage(fileName);
 		
+		JFrame frame = new JFrame();
+		JPanel panel = new JPanel();
+		JLabel label = new JLabel();
+		JLabel label2 = new JLabel();
+		
+		frame.setVisible(true);
+		
+		frame.add(panel);
+		panel.add(label2);
+		panel.add(label);
+		
+		
+		label.setText(message);
+		label2.setIcon(image);
+		frame.setTitle(title);
+		
+		frame.pack();
+		frame.setLocationRelativeTo(null);
 	}
 	
 	// 7. Call this method in the Runner class
