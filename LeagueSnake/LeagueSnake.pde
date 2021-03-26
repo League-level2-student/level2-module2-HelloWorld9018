@@ -24,10 +24,23 @@ Segment(int snakeX, int snakeY){
 // All the game variables that will be shared by the game methods are here
 //*
 
-//FOOD
-int randomX = (int) random(45, 990-35);
-int randomY = (int) random(45, 790-35);
+//DIMENSIONS
+  int gridUnit = 20;
 
+
+//FOOD
+  int foodX;
+  int foodY;
+
+  int foodEaten = 0;
+
+//SNAKE
+
+
+  int snakeDirection = RIGHT;
+  Segment head;
+  int defaultX = gridUnit*6;
+  int defaultY = gridUnit*3;
 
 
 //*
@@ -36,20 +49,28 @@ int randomY = (int) random(45, 790-35);
 //*
 
 void setup() {
-  background(173, 250, 145);
-  size(1000, 800);
-  drawFood();
-  dropFood();
+ 
+  size(800, 600);
   
+  head = new Segment(defaultX, defaultY);
+  
+  frameRate(5);
+  dropFood();
+ 
 }
 
 void dropFood() {
   //Set the food in a new random location
   
-  fill(225, 0, 0);
-  ellipse(randomX, randomY, 35, 35);
+  boolean intersection = true;
   
-    
+  foodX = (int) random(1, 40) * 20;
+  foodY = (int) random(1, 30) * 20;
+  
+ // while(intersection){
+ //   for 
+  //}
+  
 }
 
 
@@ -61,16 +82,25 @@ void dropFood() {
 
 void draw() {
   
+   background(173, 250, 145);
+   move();
+   drawFood();
+   drawSnake();
+  
 }
 
 void drawFood() {
   //Draw the food
+  
   fill(225, 0, 0);
-  ellipse(randomX, randomY, 35, 35);
+  rect(foodX, foodY, gridUnit, gridUnit);
+ 
 }
 
 void drawSnake() {
   //Draw the head of the snake followed by its tail
+  fill(0, 0, 225);
+  rect(head.snakeX, head.snakeY, gridUnit, gridUnit);
 }
 
 
@@ -81,7 +111,12 @@ void drawSnake() {
 
 void drawTail() {
   //Draw each segment of the tail 
-
+ // for (int i = 1; i <8; i++){
+   //int partSize = headSize /i;
+ // rect(snakeX-gridUnit*i, snakeY, gridUnit, gridUnit);
+ // }
+ // ellipse(snakeX-ellipseSpace, snakeY, headSize, headSize);
+  
 }
 
 void manageTail() {
@@ -104,28 +139,61 @@ void checkTailCollision() {
 
 void keyPressed() {
   //Set the direction of the snake according to the arrow keys pressed
-  
+//  if (keyPressed){
+    
+      if (keyCode == UP){
+      snakeDirection = UP;
+      }
+      else if (keyCode == DOWN){
+      snakeDirection = DOWN;
+      }  
+      else if (keyCode == LEFT){
+      snakeDirection = LEFT;
+      }
+      else if (keyCode == RIGHT){
+      snakeDirection = RIGHT;
+      }
+    
+ // }
+  move();
 }
 
 void move() {
   //Change the location of the Snake head based on the direction it is moving.
   
-    /*
-  switch(direction) {
-  case UP:
+    
+  switch(snakeDirection) {
+   case UP:
     // move head up here 
+    
+      head.snakeY = head.snakeY - gridUnit;
     break;
+    
   case DOWN:
     // move head down here 
+    
+    head.snakeY = head.snakeY + gridUnit;
     break;
+    
   case LEFT:
    // figure it out 
+   head.snakeX = head.snakeX - gridUnit;
     break;
+    
   case RIGHT:
     // mystery code goes here 
+    head.snakeX = head.snakeX + gridUnit;
     break;
   }
-  */
+  
+  checkBoundaries();
+  
+  if(head.snakeX > gridUnit*40){
+    head.snakeX = defaultX;
+  }
+  
+  //do y boundary.
+  
 }
 
 void checkBoundaries() {
