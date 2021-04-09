@@ -24,6 +24,8 @@ Segment(int snakeX, int snakeY){
 // All the game variables that will be shared by the game methods are here
 //*
 
+ArrayList <Segment> parts = new ArrayList <Segment>();
+
 //DIMENSIONS
   int gridUnit = 20;
 
@@ -42,7 +44,6 @@ Segment(int snakeX, int snakeY){
   int defaultX = gridUnit*6;
   int defaultY = gridUnit*3;
 
-
 //*
 // ***** SETUP METHODS *****
 // These methods are called at the start of the game.
@@ -54,22 +55,27 @@ void setup() {
   
   head = new Segment(defaultX, defaultY);
   
-  frameRate(5);
+  frameRate(10);
   dropFood();
- 
+  parts.add(head);
+  
+
 }
 
 void dropFood() {
   //Set the food in a new random location
   
+  //make sure head doesn't spawn on the food
+  
   boolean intersection = true;
   
+  while(intersection){
   foodX = (int) random(1, 40) * 20;
   foodY = (int) random(1, 30) * 20;
   
- // while(intersection){
- //   for 
-  //}
+  if(head.snakeX != foodX && head.snakeY != foodY){intersection = false;}
+  
+  }
   
 }
 
@@ -83,10 +89,19 @@ void dropFood() {
 void draw() {
   
    background(173, 250, 145);
+   
+     textSize(20);
+   text("Score: " + foodEaten, 10, 30);
+   
+   eat();
    move();
    drawFood();
    drawSnake();
-  
+    //eat();
+   
+    
+    manageTail();
+    
 }
 
 void drawFood() {
@@ -111,6 +126,20 @@ void drawSnake() {
 
 void drawTail() {
   //Draw each segment of the tail 
+  
+  for(int i = 0; i < parts.size(); i++){
+    int x = parts.get(i).snakeX;
+    int y = parts.get(i).snakeY;
+    rect(x, y, gridUnit, gridUnit);
+    //println();
+    
+    //manageTail();
+    
+  }
+  
+  
+  
+  
  // for (int i = 1; i <8; i++){
    //int partSize = headSize /i;
  // rect(snakeX-gridUnit*i, snakeY, gridUnit, gridUnit);
@@ -122,12 +151,33 @@ void drawTail() {
 void manageTail() {
   //After drawing the tail, add a new segment at the "start" of the tail and remove the one at the "end" 
   //This produces the illusion of the snake tail moving.
+    checkTailCollision();
+   drawTail();
+
+  parts.add(new Segment(head.snakeX, head.snakeY));
+  
+  if(parts.size() > foodEaten){
+    
+    parts.remove(0);
+    
+  }
+  
   
 }
 
 void checkTailCollision() {
   //If the snake crosses its own tail, shrink the tail back to one segment
-  
+   for(int i = 1; i < parts.size(); i++){
+  if(head.snakeX == parts.get(i).snakeX && head.snakeY == parts.get(i).snakeY){
+    println("KA-BOOM!");
+    
+    foodEaten = 1;
+    parts.clear();
+    parts.add(head);
+    
+    
+  }
+  }
 }
 
 
@@ -141,21 +191,21 @@ void keyPressed() {
   //Set the direction of the snake according to the arrow keys pressed
 //  if (keyPressed){
     
-      if (keyCode == UP){
+      if (keyCode == UP && snakeDirection != DOWN){
       snakeDirection = UP;
       }
-      else if (keyCode == DOWN){
+      else if (keyCode == DOWN && snakeDirection != UP){
       snakeDirection = DOWN;
       }  
-      else if (keyCode == LEFT){
+      else if (keyCode == LEFT && snakeDirection != RIGHT){
       snakeDirection = LEFT;
       }
-      else if (keyCode == RIGHT){
+      else if (keyCode == RIGHT && snakeDirection != LEFT){
       snakeDirection = RIGHT;
       }
     
  // }
-  move();
+  //move();
 }
 
 void move() {
@@ -165,8 +215,10 @@ void move() {
   switch(snakeDirection) {
    case UP:
     // move head up here 
-    
+      
       head.snakeY = head.snakeY - gridUnit;
+      
+      
     break;
     
   case DOWN:
@@ -188,22 +240,45 @@ void move() {
   
   checkBoundaries();
   
-  if(head.snakeX > gridUnit*40){
-    head.snakeX = defaultX;
-  }
-  
-  //do y boundary.
+  //parts.add(new Segment(head.snakeX, head.snakeY));
+  //manageTail();
   
 }
 
 void checkBoundaries() {
  //If the snake leaves the frame, make it reappear on the other side
- 
+  
+   if(head.snakeX > 780){
+    head.snakeX = 0;
+  }
+  
+  if(head.snakeX < 0){
+    head.snakeX = 780;
+  }
+  
+  if(head.snakeY > 580){
+    head.snakeY = 0;
+  }
+  
+  if (head.snakeY < 0){
+    head.snakeY = 580;
+  }
+  
 }
 
 
 
 void eat() {
   //When the snake eats the food, its tail should grow and more food appear
+  
+  if(head.snakeX == foodX && head.snakeY == foodY){
+    foodEaten++;
+    dropFood();
+    //grow tail?
+    
+  // drawTail();
+    println(foodEaten);
+    
+  }
 
 }
